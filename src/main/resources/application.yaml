@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: videostorageservice
+
+  cloud:
+    aws:
+      region: us-east-1
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+      session-token: ${AWS_SESSION_TOKEN}
+sqs:
+  queue:
+    name: s3-object-created
+s3:
+  bucket:
+    name: 010613378779-process-video-bucket
+videomanagementservice:
+  url: http://localhost:8080
