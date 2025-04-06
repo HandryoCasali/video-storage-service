@@ -1,4 +1,4 @@
-package br.com.tech.challenge.videostorageservice.config.s3;
+package br.com.tech.challenge.videostorageservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
