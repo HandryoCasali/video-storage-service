@@ -1,21 +1,22 @@
-server:
-  port: 8081
-
 spring:
   application:
     name: videostorageservice
 
-  cloud:
-    aws:
-      region: us-east-1
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
-      session-token: ${AWS_SESSION_TOKEN}
 sqs:
   queue:
-    name: s3-object-created
+    name: ${SQS_QUEUE_NAME}
 s3:
   bucket:
-    name: 010613378779-process-video-bucket
+    name: ${S3_BUCKET_NAME}
 videomanagementservice:
-  url: http://localhost:8080
+  url: ${VIDEO_MANAGEMENT_URL}
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health
+server:
+  servlet:
+    context-path: /storage-service

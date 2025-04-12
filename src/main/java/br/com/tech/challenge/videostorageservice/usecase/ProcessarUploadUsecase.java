@@ -13,7 +13,6 @@ public class ProcessarUploadUsecase {
 
     public void processar(String mensagem){
         CreateVideoDto dto = UploadVideoEventMapper.parseS3Event(mensagem);
-        System.out.println(dto);
         client.createVideo(dto);
     }
 }
