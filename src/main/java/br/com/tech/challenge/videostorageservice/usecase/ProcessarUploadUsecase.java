@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 public class ProcessarUploadUsecase {
     private final VideoManagementServiceClient client;
 
-    public void processar(String mensagem){
-        CreateVideoDto dto = UploadVideoEventMapper.parseS3Event(mensagem);
+    public void processar(CreateVideoDto dto){
         client.createVideo(dto);
     }
 }
