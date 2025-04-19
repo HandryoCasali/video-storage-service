@@ -1,7 +1,7 @@
 package br.com.tech.challenge.videostorageservice.entrypoint;
 
 import br.com.tech.challenge.videostorageservice.usecase.GeneratePreSignerUrlUsecase;
-import br.com.tech.challenge.videostorageservice.dataprovider.dto.PreSignedUrlDto;
+import br.com.tech.challenge.videostorageservice.entrypoint.dto.UploadPreSignedUrlDto;
 import br.com.tech.challenge.videostorageservice.entrypoint.dto.UploadRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +18,10 @@ public class UploadController {
 
     // 1️⃣ Gerar pre-signed URLs para múltiplos vídeos
     @PostMapping("/preSignedUrls")
-    public ResponseEntity<List<PreSignedUrlDto>> generateUploadUrls(@RequestHeader String userId, @RequestBody UploadRequestDto request) {
-        List<PreSignedUrlDto> dtos = request.fileNames()
+    public ResponseEntity<List<UploadPreSignedUrlDto>> generateUploadUrls(@RequestHeader String userId, @RequestBody UploadRequestDto request) {
+        List<UploadPreSignedUrlDto> dtos = request.fileNames()
                 .stream()
-                    .map(filename-> s3Service.generate(userId, filename))
+                    .map(filename-> s3Service.generateUpload(userId, filename))
                 .toList();
         return ResponseEntity.ok(dtos);
     }

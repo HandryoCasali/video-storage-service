@@ -1,10 +1,13 @@
 package br.com.tech.challenge.videostorageservice.usecase;
 
-import br.com.tech.challenge.videostorageservice.dataprovider.dto.PreSignedUrlDto;
+import br.com.tech.challenge.videostorageservice.entrypoint.dto.DownloadPreSignedUrlDto;
+import br.com.tech.challenge.videostorageservice.entrypoint.dto.UploadPreSignedUrlDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
@@ -21,7 +24,7 @@ public class GeneratePreSignerUrlUsecase {
         this.bucketName = bucketName;
     }
 
-    public PreSignedUrlDto generate(String userId, String fileName) {
+    public UploadPreSignedUrlDto generateUpload(String userId, String fileName) {
         String videoId = UUID.randomUUID().toString();
         String path = userId+"/videos/"+fileName+"_"+videoId+".mp4";
 
@@ -36,6 +39,20 @@ public class GeneratePreSignerUrlUsecase {
                 .putObjectRequest(objectRequest)
                 .build();
         String url = s3Presigner.presignPutObject(presignRequest).url().toString();
-        return new PreSignedUrlDto(videoId, fileName, path, url);
+        return new UploadPreSignedUrlDto(videoId, fileName, path, url);
+    }
+
+    public DownloadPreSignedUrlDto generateDownload(String zipPath) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(zipPath)
+                .build();
+
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(15)) // URL válida por 15 minutos
+                .getObjectRequest(getObjectRequest)
+                .build();
+        String url = s3Presigner.presignGetObject(presignRequest).url().toString();
+        return new DownloadPreSignedUrlDto(url);
     }
 }
